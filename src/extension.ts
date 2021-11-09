@@ -22,36 +22,79 @@ export function activate(context: vscode.ExtensionContext) {
 	// 	// Display a message box to the user
 	// 	vscode.window.showInformationMessage('Hello ONNX-CONNX Covert!');
 	// });
-
+	const provide = new OnnxViewProvider(context.extensionUri);
 	context.subscriptions.push(
-		vscode.commands.registerCommand('onnx-connx-covert.start',()=>{
-			const panel = vscode.window.createWebviewPanel(
-				'Onnx-Connx-Covert',
-				'onnx-connx',
+		vscode.window.registerWebviewViewProvider(OnnxViewProvider.viewType, provide),
 
-				vscode.ViewColumn.One,{
-					enableScripts:true,
-					retainContextWhenHidden:true,
-					enableCommandUris:true,
-					// portMapping:[
-					// 	{webviewPort:PORT,extensionHostPort:PORT}
-					// ]
-				}
+		// vscode.commands.registerCommand('onnx-connx-covert.start',()=>{
+		// 	const panel = vscode.window.createWebviewPanel(
+		// 		'Onnx-Connx-Covert',
+		// 		'onnx-connx',
 
-			);
-			//const cspSource = panel.webview.cspSource;
-			//Get path to resource on disk
-			const pathToHtml = vscode.Uri.file(
-				path.join(context.extensionPath,'src','page.html')
-			);
-			//Get the special URI to use with the webview
-			const pathUri = pathToHtml.with({scheme:'vscode-resource'});
+		// 		vscode.ViewColumn.One,{
+		// 			enableScripts:true,
+		// 			retainContextWhenHidden:true,
+		// 			enableCommandUris:true,
+		// 			// portMapping:[
+		// 			// 	{webviewPort:PORT,extensionHostPort:PORT}
+		// 			// ]
+		// 		}
+
+		// 	);
+		// 	//const cspSource = panel.webview.cspSource;
+		// 	//Get path to resource on disk
+		// 	const pathToHtml = vscode.Uri.file(
+		// 		path.join(context.extensionPath,'src','page.html')
+		// 	);
+		// 	//Get the special URI to use with the webview
+		// 	const pathUri = pathToHtml.with({scheme:'vscode-resource'});
 			
-			// And set its HTML content
-			panel.webview.html = fs.readFileSync(pathUri.fsPath,'utf-8');
-		}), 
+		// 	// And set its HTML content
+		// 	panel.webview.html = fs.readFileSync(pathUri.fsPath,'utf-8');
+		// }), 
 	);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+class OnnxViewProvider implements vscode.WebviewViewProvider {
+
+	public static readonly viewType = 'id';
+
+	private _view?: vscode.WebviewView;
+
+	constructor(
+		private readonly _extensionUri: vscode.Uri,
+	) { }
+			//Get path to resource on disk
+
+	public resolveWebviewView(
+		webviewView: vscode.WebviewView,
+		context: vscode.WebviewViewResolveContext,
+		_token: vscode.CancellationToken,
+	) {
+		this._view = webviewView;
+
+		webviewView.webview.options = {
+			// Allow scripts in the webview
+			enableScripts: true,
+
+			localResourceRoots: [
+				this._extensionUri
+			]
+		};
+
+		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+	}
+
+
+	private _getHtmlForWebview(webview: vscode.Webview) {
+		// Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
+		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'page.html'));
+		const pathUri = scriptUri.with({scheme:'vscode-resource'});
+		const html = fs.readFileSync(pathUri.fsPath,'utf-8');
+		return html;
+	}
+}

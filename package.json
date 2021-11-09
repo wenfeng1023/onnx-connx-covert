@@ -10,10 +10,29 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:onnx-connx-covert.start"
+        "onCommand:onnx-connx-covert.start",
+		"onView:id"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "connx",
+					"icon": "./src/1.png",
+					"title": "onnx-connx"
+				}
+			]
+		},
+		"views": {
+			"connx":[
+				{
+					"id": "id",
+					"type": "webview",
+					"name": "name"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "onnx-connx-covert.start",
