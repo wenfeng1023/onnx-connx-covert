@@ -21,7 +21,7 @@
 			"activitybar": [
 				{
 					"id": "connx",
-					"icon": "./out/1.png",
+					"icon": "./src/1.png",
 					"title": "onnx-connx"
 				}
 			]
