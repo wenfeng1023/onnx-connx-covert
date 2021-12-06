@@ -60,7 +60,7 @@ export function deactivate() {}
 
 class OnnxViewProvider implements vscode.WebviewViewProvider {
 
-	public static readonly viewType = 'id';
+	public static readonly viewType = 'opw';
 
 	private _view?: vscode.WebviewView;
 
@@ -92,7 +92,7 @@ class OnnxViewProvider implements vscode.WebviewViewProvider {
 
 	private _getHtmlForWebview(webview: vscode.Webview) {
 		// Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
-		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'page.html'));
+		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'out', 'page.html'));
 		const pathUri = scriptUri.with({scheme:'vscode-resource'});
 		const html = fs.readFileSync(pathUri.fsPath,'utf-8');
 		return html;

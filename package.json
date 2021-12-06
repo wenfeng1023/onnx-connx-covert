@@ -3,6 +3,8 @@
 	"displayName": "ONNX-CONNX Covert",
 	"description": "AI Model Covert",
 	"version": "0.0.1",
+	"publisher": "neowine",
+	"repository": "https://github.com/wenfeng1023/onnx-connx-covert.git",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
@@ -11,7 +13,7 @@
 	],
 	"activationEvents": [
         "onCommand:onnx-connx-covert.start",
-		"onView:id"
+		"onView:opw"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,7 +21,7 @@
 			"activitybar": [
 				{
 					"id": "connx",
-					"icon": "./src/1.png",
+					"icon": "./out/1.png",
 					"title": "onnx-connx"
 				}
 			]
@@ -27,7 +29,7 @@
 		"views": {
 			"connx":[
 				{
-					"id": "id",
+					"id": "opw",
 					"type": "webview",
 					"name": "name"
 				}
